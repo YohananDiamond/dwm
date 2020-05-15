@@ -1,8 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int borderpx  = 1;        /* window border size */
+static const int gappx = 5;                     /* gaps size */
+static const unsigned int snap      = 16;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JoyPixels:pixelsize=10:antialias=true:autohint=true", "monospace:size=10", "JetBrains Mono Medium:size=10" };
@@ -94,6 +95,11 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+
+
+	{ MODKEY|ShiftMask,             XK_k,	   setgaps,        {.i = -5 } },
+	{ MODKEY|ShiftMask,             XK_j,	   setgaps,        {.i = +5 } },
+	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 
 	{ MODKEY,			XK_p,	   zoom,           {0} },
 
