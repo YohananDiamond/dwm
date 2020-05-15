@@ -6,7 +6,11 @@ static const int gappx = 5;                     /* gaps size */
 static const unsigned int snap      = 16;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "JoyPixels:pixelsize=10:antialias=true:autohint=true", "monospace:size=10", "JetBrains Mono Medium:size=10" };
+static const char *fonts[]          = {
+	"JetBrains Mono Medium:size=10",
+	"JoyPixels:pixelsize=10:antialias=true:autohint=true",
+	"monospace:size=10",
+};
 
 static char normbgcolor[] = "#222222";
 static char normbordercolor[] = "#444444";
