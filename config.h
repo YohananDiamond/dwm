@@ -12,6 +12,8 @@ static const char *fonts[]          = {
 	"monospace:size=10",
 };
 
+static const int hlwindowtitle = 0; /* if window title should be highlighted */
+
 static char normbgcolor[] = "#222222";
 static char normbordercolor[] = "#444444";
 static char normfgcolor[] = "#bbbbbb";
@@ -25,7 +27,7 @@ static char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "1:cmd", "2:alt", "3:www", "4", "5", "6", "7", "8", "9:bkg" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -61,7 +63,7 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[]  = { "env", "$TERMINAL", NULL };
+static const char *termcmd[] = { "st", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
