@@ -59,6 +59,7 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define STR_EQ(str1, str2)      !strcmp((str1), (str2))
 
 #define XRDB_LOAD_COLOR(R,V) if (XrmGetResource(xrdb, R, NULL, &type, &value) == True) { \
                                if (value.addr != NULL && strnlen(value.addr, 8) == 7 && value.addr[0] == '#') { \
@@ -223,6 +224,7 @@ static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
+static void setlayout_default(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
@@ -233,8 +235,8 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
-static void togglefloating(const Arg *arg);
-static void togglefullscreen(const Arg *arg);
+static void toggle_floating(const Arg *arg);
+static void toggle_fullscreen(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -1230,7 +1232,7 @@ movemouse(const Arg *arg)
 				ny = selmon->wy + selmon->wh - HEIGHT(c);
 			if (!c->isfloating && selmon->lt[selmon->sellt]->arrange
 			&& (abs(nx - c->x) > snap || abs(ny - c->y) > snap))
-				togglefloating(NULL);
+				toggle_floating(NULL);
 			if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
 				resize(c, nx, ny, c->w, c->h, 1);
 			break;
@@ -1386,7 +1388,7 @@ resizemouse(const Arg *arg)
 			{
 				if (!c->isfloating && selmon->lt[selmon->sellt]->arrange
 				&& (abs(nw - c->w) > snap || abs(nh - c->h) > snap))
-					togglefloating(NULL);
+					toggle_floating(NULL);
 			}
 			if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
 				resize(c, c->x, c->y, nw, nh, 1);
@@ -1564,6 +1566,13 @@ setlayout(const Arg *arg)
 		arrange(selmon);
 	else
 		drawbar(selmon);
+}
+
+void
+setlayout_default(const Arg *arg)
+{
+	if (!selmon->showbar) togglebar(arg);
+	setlayout(&((Arg) { .v = &layouts[0] }));
 }
 
 /* arg > 1.0 will set mfact absolutely */
@@ -1768,7 +1777,7 @@ togglebar(const Arg *arg)
 }
 
 void
-togglefloating(const Arg *arg)
+toggle_floating(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
@@ -1781,7 +1790,8 @@ togglefloating(const Arg *arg)
 	arrange(selmon);
 }
 
-void togglefullscreen(const Arg *arg)
+void
+toggle_fullscreen(const Arg *arg)
 {
 	if (selmon->showbar) {
 		for (last_layout = (Layout*) layouts; last_layout != selmon->lt[selmon->sellt]; last_layout++);
@@ -2210,10 +2220,15 @@ zoom(const Arg *arg)
 int
 main(int argc, char *argv[])
 {
-	if (argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-" VERSION);
-	else if (argc != 1)
-		die("usage: dwm [-v]");
+	for (int i = 1; i < argc; i++) {
+		if (STR_EQ("-v", argv[i]) || STR_EQ("--version", argv[i])) {
+			die("dwm-" VERSION);
+		} else {
+			fprintf(stderr, "Invalid argument: %s\n", argv[i]);
+			die("usage: %s [-v | --version]", argv[0]);
+		}
+	}
+
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))
