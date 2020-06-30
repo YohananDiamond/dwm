@@ -1,8 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
 /* options */
-static const unsigned int borderpx  = 1;        /* window border size */
-static const int gappx		    = 5;        /* gaps size */
+static const unsigned int borderpx  = 2;        /* window border size */
+static const int gappx		    = 0;        /* gaps size */
 static const unsigned int snap      = 16;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
