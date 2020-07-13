@@ -2,7 +2,7 @@
 
 /* options */
 static const unsigned int borderpx  = 2;        /* window border size */
-static const int gappx		    = 0;        /* gaps size */
+static const int gappx		        = 8;        /* gaps size */
 static const unsigned int snap      = 16;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -96,7 +96,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_j,	   setgaps,        {.i = +5 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 
-	{ MODKEY,			XK_p,	   zoom,           {0} },
+	{ MODKEY,						XK_p,	   zoom,           {0} },
 	{ MODKEY,                       XK_F5,	   xrdb,           {.v = NULL } },
 
 	/* switch workspaces */
