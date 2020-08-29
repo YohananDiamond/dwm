@@ -2,10 +2,10 @@
 
 /* options */
 static const unsigned int borderpx  = 2;        /* window border size */
-static const int gappx		        = 8;        /* gaps size */
+static const int gappx		    = 0;        /* gaps size */
 static const unsigned int snap      = 16;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
+static const int topbar             = 0;        /* 0 means bottom bar */
 
 /* theme */
 static const char *fonts[]          = {
@@ -92,12 +92,11 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
-	{ MODKEY|ShiftMask,             XK_k,	   setgaps,        {.i = -5 } },
-	{ MODKEY|ShiftMask,             XK_j,	   setgaps,        {.i = +5 } },
+	{ MODKEY|ShiftMask,             XK_g,	   setgaps,        {.i = -5 } },
+	{ MODKEY,                       XK_g,	   setgaps,        {.i = +5 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 
 	{ MODKEY,						XK_p,	   zoom,           {0} },
-	{ MODKEY,                       XK_F5,	   xrdb,           {.v = NULL } },
 
 	/* switch workspaces */
 	TAGKEYS(                        XK_1,                      0)
@@ -110,7 +109,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 
-        /* shell commands */
+  /* specials */
+	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    xrdb,          {.v = NULL} },
 	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,         SHCMD("start-sxhkd standard") },
 };
 
