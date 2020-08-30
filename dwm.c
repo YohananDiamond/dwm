@@ -61,7 +61,7 @@
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 #define STR_EQ(str1, str2)      !strcmp((str1), (str2))
 
-#define XRDB_LOAD_COLOR(R,V) if (XrmGetResource(xrdb, R, NULL, &type, &value) == True) { \
+#define XRDB_LOAD_COLOR(R,V) if (XrmGetResource(xdb, R, NULL, &type, &value) == True) { \
                                if (value.addr != NULL && strnlen(value.addr, 8) == 7 && value.addr[0] == '#') { \
                                  int i = 1; \
                                  for (; i <= 6; i++) { \
@@ -199,7 +199,7 @@ static void grabkeys(void);
 static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
-static void loadxrdb(void);
+static void xrdb(void);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
@@ -258,11 +258,11 @@ static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
-static void xrdb(const Arg *arg);
+static void key_xrdb(const Arg *arg);
 static void zoom(const Arg *arg);
 
 /* variables */
-static const char broken[] = "broken";
+static const char broken[] = "[broken]";
 static char stext[256];
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
@@ -1042,31 +1042,25 @@ killclient(const Arg *arg)
 }
 
 void
-loadxrdb()
+xrdb(void)
 {
-	Display *display;
 	char *resm;
-	XrmDatabase xrdb;
+	XrmDatabase xdb;
 	char *type;
 	XrmValue value;
 
-	display = XOpenDisplay(NULL);
-	if (display != NULL) {
-		resm = XResourceManagerString(display);
-		if (resm != NULL) {
-			xrdb = XrmGetStringDatabase(resm);
-			if (xrdb != NULL) {
-				XRDB_LOAD_COLOR("dwm.norm.border", normbordercolor);
-				XRDB_LOAD_COLOR("dwm.norm.bg", normbgcolor);
-				XRDB_LOAD_COLOR("dwm.norm.fg", normfgcolor);
-				XRDB_LOAD_COLOR("dwm.sel.border", selbordercolor);
-				XRDB_LOAD_COLOR("dwm.sel.bg", selbgcolor);
-				XRDB_LOAD_COLOR("dwm.sel.fg", selfgcolor);
-			}
-		}
-	}
+	resm = XResourceManagerString(dpy);
+	if (resm == NULL) return;
 
-	XCloseDisplay(display);
+	xdb = XrmGetStringDatabase(resm);
+	if (xdb == NULL) return;
+
+	XRDB_LOAD_COLOR("dwm.norm.border", normbordercolor);
+	XRDB_LOAD_COLOR("dwm.norm.bg", normbgcolor);
+	XRDB_LOAD_COLOR("dwm.norm.fg", normfgcolor);
+	XRDB_LOAD_COLOR("dwm.sel.border", selbordercolor);
+	XRDB_LOAD_COLOR("dwm.sel.bg", selbgcolor);
+	XRDB_LOAD_COLOR("dwm.sel.fg", selfgcolor);
 }
 
 
@@ -2186,19 +2180,22 @@ xerrordummy(Display *dpy, XErrorEvent *ee)
 	return 0;
 }
 
-/* Startup Error handler to check if another window manager
- * is already running. */
+
+/**
+ * Startup Error handler to check if another window manager
+ * is already running.
+ */
 int
 xerrorstart(Display *dpy, XErrorEvent *ee)
 {
-	die("dwm: another window manager is already running");
+	die("another window manager is already running");
 	return -1;
 }
 
 void
-xrdb(const Arg *arg)
+key_xrdb(const Arg *arg)
 {
-	loadxrdb();
+	xrdb();
 	for (int i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], 3);
 	focus(NULL);
@@ -2232,17 +2229,22 @@ main(int argc, char *argv[])
 	}
 
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
-		fputs("warning: no locale support\n", stderr);
-	if (!(dpy = XOpenDisplay(NULL)))
-		die("dwm: cannot open display");
+		warn("no locale support");
+
+	dpy = XOpenDisplay(NULL);
+	if (dpy == NULL)
+		die("could not open display");
+	
 	checkotherwm();
 	XrmInitialize();
-	loadxrdb();
+	xrdb();
 	setup();
+
 #ifdef __OpenBSD__
 	if (pledge("stdio rpath proc exec", NULL) == -1)
-		die("pledge");
+		die("failed to pledge");
 #endif /* __OpenBSD__ */
+
 	scan();
 	run();
 	cleanup();

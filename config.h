@@ -34,7 +34,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "float",    NULL,       NULL,       NULL,         1,           -1 },
+	{ "float",    NULL,       NULL,       0,            1,           -1 },
 };
 
 /* layout-related */
@@ -110,7 +110,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 
   /* specials */
-	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    xrdb,          {.v = NULL} },
+	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    key_xrdb,          {.v = NULL} },
 	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,         SHCMD("start-sxhkd standard") },
 };
 
