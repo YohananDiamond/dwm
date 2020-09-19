@@ -1,9 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 
 /* options */
-static const unsigned int borderpx  = 2;        /* window border size */
+static const unsigned int borderpx  = 1;        /* window border size */
 static const int gappx		    = 0;        /* gaps size */
-static const unsigned int snap      = 16;       /* snap pixel */
+static const unsigned int snap      = 8;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 
@@ -58,7 +58,7 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", (cmd), NULL } }
+#define SHCMD(cmd) { .v = (const char*[]) { "/bin/sh", "-c", (cmd), NULL } }
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -87,10 +87,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 
 	/* monitor-related */
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	/* { MODKEY,                       XK_comma,  focusmon,       {.i = -1 } }, */
+	/* { MODKEY,                       XK_period, focusmon,       {.i = +1 } }, */
+	/* { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } }, */
+	/* { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } }, */
 
 	{ MODKEY|ShiftMask,             XK_g,	   setgaps,        {.i = -5 } },
 	{ MODKEY,                       XK_g,	   setgaps,        {.i = +5 } },
@@ -110,8 +110,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 
   /* specials */
-	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    key_xrdb,          {.v = NULL} },
-	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,         SHCMD("start-sxhkd standard") },
+	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    key_xrdb,          {.v = NULL } },
+	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,             SHCMD("start-sxhkd standard") },
 };
 
 /* button definitions */
