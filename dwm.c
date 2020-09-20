@@ -469,7 +469,6 @@ buttonpress(XEvent *e)
 			click = ClkTagBar;
 			arg.ui = 1 << i;
 		} else if (ev->x < x + blw) {
-			
 			click = ClkLtSymbol;
 		} else if (ev->x > selmon->ww - TEXTW(stext)) {
 			click = ClkStatusText;
