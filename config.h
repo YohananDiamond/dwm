@@ -9,7 +9,8 @@ static const int topbar             = 0;        /* 0 means bottom bar */
 
 /* theme */
 static const char *fonts[]          = {
-	"JetBrains Mono Medium:size=10",
+	/* "JetBrains Mono Medium:size=10", */
+	"Fira Code:size=10",
 	"JoyPixels:pixelsize=10:antialias=true:autohint=true",
 	"monospace:size=10",
 };
@@ -112,6 +113,7 @@ static Key keys[] = {
   /* specials */
 	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    key_xrdb,          {.v = NULL } },
 	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,             SHCMD("start-sxhkd standard") },
+	{ MODKEY|ControlMask,           XK_t,       spawn,             SHCMD("st") },
 };
 
 /* button definitions */

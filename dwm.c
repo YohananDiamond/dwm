@@ -451,26 +451,31 @@ buttonpress(XEvent *e)
 	XButtonPressedEvent *ev = &e->xbutton;
 
 	click = ClkRootWin;
+
 	/* focus monitor if necessary */
 	if ((m = wintomon(ev->window)) && m != selmon) {
 		unfocus(selmon->sel, 1);
 		selmon = m;
 		focus(NULL);
 	}
+
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
-		do
+		do {
 			x += TEXTW(tags[i]);
-		while (ev->x >= x && ++i < LENGTH(tags));
+		} while (ev->x >= x && ++i < LENGTH(tags));
+
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
-		} else if (ev->x < x + blw)
+		} else if (ev->x < x + blw) {
+			
 			click = ClkLtSymbol;
-		else if (ev->x > selmon->ww - TEXTW(stext))
+		} else if (ev->x > selmon->ww - TEXTW(stext)) {
 			click = ClkStatusText;
-		else
+		} else {
 			click = ClkWinTitle;
+		}
 	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
@@ -710,60 +715,75 @@ dirtomon(int dir)
 	if (dir > 0) {
 		if (!(m = selmon->next))
 			m = mons;
-	} else if (selmon == mons)
+	} else if (selmon == mons) {
+		
 		for (m = mons; m->next; m = m->next);
-	else
+	} else {
 		for (m = mons; m->next != selmon; m = m->next);
+	}
+
 	return m;
 }
 
 void
 drawbar(Monitor *m)
 {
-	int x, w, tw = 0;
+	int x = 0, tw = 0; /* TODO(yohanan): stop using `w` like this */
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
-	unsigned int i, occ = 0, urg = 0;
-	Client *c;
+	unsigned int occ = 0, urg = 0;
 
-	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
+	/* draw status first so it can be overdrawn by tags later;
+         * it is only drawn on selected monitor, though. */
+	if (m == selmon) {
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
 	}
 
-	for (c = m->clients; c; c = c->next) {
+	/* TODO(yohanan): understand and document this */
+	for (Client *c = m->clients; c; c = c->next) {
 		occ |= c->tags == 255 ? 0 : c->tags;
 		if (c->isurgent)
 			urg |= c->tags;
 	}
-	x = 0;
-	for (i = 0; i < LENGTH(tags); i++) {
+
+	/* draw tags */
+	for (size_t i = 0; i < LENGTH(tags); i++) {
 		/* do not draw vacant tags */
-		if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
-		continue;
+		if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i)) {
+			continue;
+		}
 
-		w = TEXTW(tags[i]);
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
-		x += w;
+		size_t width = TEXTW(tags[i]);
+		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i
+					  ? SchemeSel : SchemeNorm]);
+		drw_text(drw, x, 0, width, bh, lrpad / 2, tags[i], urg & 1 << i);
+		x += width;
 	}
-	w = blw = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
-	if ((w = m->ww - tw - x) > bh) {
+	{
+		size_t width = blw = TEXTW(m->ltsymbol);
+		drw_setscheme(drw, scheme[SchemeNorm]);
+		x = drw_text(drw, x, 0, width, bh, lrpad / 2, m->ltsymbol, 0);
+	}
+
+	size_t width = m->ww - tw - x;
+	if (width > bh) {
 		if (m->sel) {
-			/* I don't like the current way of showing a monitor is selected. I'll try to improve this later. TODO */
-			/* drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]); */
+#if 0
+			/* I don't like the current way of showing a monitor is selected. I'll try to improve this later.
+			 * TODO(yohanan): improve how this is done, maybe introduce a new scheme */
+			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
+#else
 			drw_setscheme(drw, scheme[SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
+#endif
+			drw_text(drw, x, 0, width, bh, lrpad / 2, m->sel->name, 0);
 			if (m->sel->isfloating)
 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
 		} else {
 			drw_setscheme(drw, scheme[SchemeNorm]);
-			drw_rect(drw, x, 0, w, bh, 1, 1);
+			drw_rect(drw, x, 0, width, bh, 1, 1);
 		}
 	}
 	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
