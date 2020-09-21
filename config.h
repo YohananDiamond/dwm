@@ -5,7 +5,7 @@ static const unsigned int borderpx       = 1; /* window border size */
 static const int gappx		         = 0; /* gaps size */
 static const unsigned int snap           = 8; /* snap pixel */
 static const int showbar                 = 1; /* 0 means no bar */
-static const int topbar                  = 0; /* 0 means bottom bar */
+static const int topbar                  = 1; /* 0 means bottom bar */
 static const unsigned int systraypinning = 0; /* 0 means systray follows selected monitor,
                                                  >0 means systray is in monitor X */
 static const unsigned int systrayspacing = 2; /* systray spacing */
