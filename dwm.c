@@ -495,9 +495,17 @@ buttonpress(XEvent *e)
 	}
 
 	if (ev->window == selmon->barwin) {
+		unsigned int occ = 0;
 		i = x = 0;
+
+		for (c = m->clients; c; c = c->next) {
+			occ |= c->tags == 255 ? 0 : c->tags;
+		}
+
 		do {
-			x += TEXTW(tags[i]);
+			if (occ & 1 << i || m->tagset[m->seltags] & 1 << i) {
+				x += TEXTW(tags[i]);
+			}
 		} while (ev->x >= x && ++i < LENGTH(tags));
 
 		if (i < LENGTH(tags)) {
@@ -846,9 +854,12 @@ drawbar(Monitor *m)
 	/* TODO(yohanan): understand and document this */
 	for (Client *c = m->clients; c; c = c->next) {
 		occ |= c->tags == 255 ? 0 : c->tags;
-		if (c->isurgent)
+		if (c->isurgent) {
 			urg |= c->tags;
+		}
 	}
+
+
 
 	/* draw tags */
 	for (size_t i = 0; i < LENGTH(tags); i++) {
