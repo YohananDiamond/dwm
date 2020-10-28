@@ -15,8 +15,7 @@ static const int showsystray             = 1; /* 0 means no systray */
 
 /* theme */
 static const char *fonts[]          = {
-	/* "JetBrains Mono Medium:size=10", */
-	"Fira Code:size=10",
+	"Cascadia Code:size=10",
 	"JoyPixels:pixelsize=10:antialias=true:autohint=true",
 	"monospace:size=10",
 };
@@ -41,7 +40,8 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "float",    NULL,       NULL,       0,            1,           -1 },
+	{ "float",    NULL,       NULL,           0,            1,           -1 },
+	{ NULL,       NULL,       "Event Tester", 0,            1,           -1 },
 };
 
 /* layout-related */
