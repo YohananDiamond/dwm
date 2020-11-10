@@ -298,6 +298,7 @@ static void zoom(const Arg *arg);
 static Systray *systray = NULL;
 static const char broken[] = "[broken]";
 static char stext[256];
+static int fontallocated = 0;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
@@ -545,7 +546,7 @@ checkotherwm(void)
 void
 cleanup(void)
 {
-	Arg a = {.ui = ~0};
+	Arg a = { .ui = ~0 };
 	Layout foo = { "", NULL };
 	Monitor *m;
 	size_t i;
@@ -572,6 +573,10 @@ cleanup(void)
 	XSync(dpy, False);
 	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
 	XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
+
+	if (fontallocated) {
+		free(fonts[0]);
+	}
 }
 
 void
@@ -1214,6 +1219,12 @@ xrdb(void)
 	XRDB_LOAD_COLOR("dwm.sel.border", selbordercolor);
 	XRDB_LOAD_COLOR("dwm.sel.bg", selbgcolor);
 	XRDB_LOAD_COLOR("dwm.sel.fg", selfgcolor);
+
+	XrmValue xval;
+	if (XrmGetResource(xdb, "dmenu.font", "*", &type, &xval)) {
+		fontallocated = 1;
+		fonts[0] = strdup(xval.addr);
+	}
 }
 
 

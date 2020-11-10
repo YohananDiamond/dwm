@@ -14,11 +14,11 @@ static const int systraypinningfailfirst = 1; /* 1 means that if pinning fails, 
 static const int showsystray             = 1; /* 0 means no systray */
 
 /* theme */
-static const char *fonts[]          = {
-	"Cascadia Code:size=10",
-	"JoyPixels:pixelsize=10:antialias=true:autohint=true",
+static char *fonts[] = {
 	"monospace:size=10",
+	"JoyPixels:pixelsize=10:antialias=true:autohint=true",
 };
+
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
