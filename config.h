@@ -78,6 +78,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
+
 
 	/* layouts: toggles & misc */
 	{ MODKEY,                       XK_f,      toggle_fullscreen, {0} },
@@ -103,7 +106,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_g,	   setgaps,        {.i = +5 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 
-	{ MODKEY,						XK_p,	   zoom,           {0} },
+	/* { MODKEY,						XK_p,	   zoom,           {0} }, */
 
 	/* switch workspaces */
 	TAGKEYS(                        XK_1,                      0)
@@ -117,7 +120,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 
   /* specials */
-	{ MODKEY|ShiftMask|ControlMask, XK_F5,	    key_xrdb,          {.v = NULL } },
+	{ MODKEY,                       XK_F5,      key_xrdb,          { .v = NULL } },
 	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,             SHCMD("start-sxhkd standard") },
 	{ MODKEY|ControlMask,           XK_t,       spawn,             SHCMD("st") },
 };
