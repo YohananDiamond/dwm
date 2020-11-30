@@ -2,7 +2,7 @@
 
 /* options */
 static const unsigned int borderpx       = 1; /* window border size */
-static const int gappx		         = 0; /* gaps size */
+static const int gappx		         = 8; /* gaps size */
 static const unsigned int snap           = 8; /* snap pixel */
 static const int showbar                 = 1; /* 0 means no bar */
 static const int topbar                  = 1; /* 0 means bottom bar */
@@ -39,9 +39,10 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "float",    NULL,       NULL,           0,            1,           -1 },
-	{ NULL,       NULL,       "Event Tester", 0,            1,           -1 },
+	/* class        instance    title       tags mask     isfloating   monitor */
+	{ "float",       NULL,       NULL,           0,            1,           -1 },
+	{ "Pavucontrol", NULL,       NULL,           0,            1,           -1 },
+	{ NULL,          NULL,       "Event Tester", 0,            1,           -1 },
 };
 
 /* layout-related */
