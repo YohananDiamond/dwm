@@ -93,6 +93,8 @@
 #define VERSION_MINOR               0
 #define XEMBED_EMBEDDED_VERSION (VERSION_MAJOR << 16) | VERSION_MINOR
 
+/* #define NOBORDER_ENABLED */
+
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel }; /* color schemes */
@@ -1589,13 +1591,19 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
 	wc.border_width = c->bw;
+
+#ifdef NOBORDER_ENABLED
 	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
-	      || &monocle == c->mon->lt[c->mon->sellt]->arrange))
+	    || &monocle == c->mon->lt[c->mon->sellt]->arrange)
+	    && !c->isfullscreen && !c->isfloating
+	    && NULL != c->mon->lt[c->mon->sellt]->arrange)
 	{
 		c->w = wc.width += c->bw * 2;
 		c->h = wc.height += c->bw * 2;
 		wc.border_width = 0;
 	}
+#endif
+
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
 	XSync(dpy, False);
@@ -1811,11 +1819,11 @@ setfullscreen(Client *c, int fullscreen)
 {
 	if (fullscreen && !c->isfullscreen) {
 		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
-			PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
+			PropModeReplace, (unsigned char *) &netatom[NetWMFullscreen], 1);
 		c->isfullscreen = 1;
-	} else if (!fullscreen && c->isfullscreen){
+	} else if (!fullscreen && c->isfullscreen) {
 		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
-			PropModeReplace, (unsigned char*)0, 0);
+			PropModeReplace, (unsigned char *) 0, 0);
 		c->isfullscreen = 0;
 	}
 }
@@ -1827,6 +1835,7 @@ setgaps(const Arg *arg)
 		selmon->gappx = 0;
 	else
 		selmon->gappx += arg->i;
+
 	arrange(selmon);
 }
 
@@ -2024,8 +2033,9 @@ tile(Monitor *m)
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if (n == 0)
-		return;
+
+	if (n == 0) return;
+
 	if (n == 1) {
 		c = nexttiled(m->clients);
 		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
@@ -2039,7 +2049,8 @@ tile(Monitor *m)
 		mw = m->ww - m->gappx;
 		ns = 1;
 	}
-	for (i = 0, my = ty = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+
+	for (i = 0, my = ty = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
 		if (i < m->nmaster) {
 			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
 			resize(c, m->wx + m->gappx, m->wy + my, mw - 2*c->bw - m->gappx*(5-ns)/2, h - 2*c->bw, 0);
@@ -2051,6 +2062,7 @@ tile(Monitor *m)
 			if(ty + HEIGHT(c) + m->gappx < m->wh)
 				ty += HEIGHT(c) + m->gappx;
 		}
+	}
 }
 
 void
