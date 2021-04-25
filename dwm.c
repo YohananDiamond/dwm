@@ -894,7 +894,7 @@ drawbar(Monitor *m)
 	size_t width = m->ww - tw - systraywidth - x;
 	if (width > bh) {
 		if (m->sel) {
-#if 0
+#if 1
 			/* I don't like the current way of showing a monitor is selected. I'll try to improve this later.
 			 * TODO(yohanan): improve how this is done, maybe introduce a new scheme */
 			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);

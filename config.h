@@ -1,5 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
+#define AltMask Mod1Mask
+#define SuperMask Mod4Mask
+
 /* options */
 static const unsigned int borderpx       = 1; /* window border size */
 static const int gappx		         = 8; /* gaps size */
@@ -62,54 +65,54 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ SuperMask,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ SuperMask|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ SuperMask|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ SuperMask|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]) { "/bin/sh", "-c", (cmd), NULL } }
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY|ShiftMask|ControlMask, XK_e,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
+	{ SuperMask,                       XK_q,      killclient,     {0} },
+	{ SuperMask|ShiftMask|ControlMask, XK_e,      quit,           {0} },
+	{ SuperMask|ShiftMask,             XK_b,      togglebar,      {0} },
+	{ SuperMask,                       XK_j,      focusstack,     {.i = +1 } },
+	{ SuperMask,                       XK_k,      focusstack,     {.i = -1 } },
+	{ SuperMask,                       XK_h,      setmfact,       {.f = -0.05} },
+	{ SuperMask,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ SuperMask|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
+	{ SuperMask|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
+	{ SuperMask|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ SuperMask|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 
 
 	/* layouts: toggles & misc */
-	{ MODKEY,                       XK_f,      toggle_fullscreen, {0} },
-	{ MODKEY,                       XK_t,      setlayout_default, {0} },
-	{ MODKEY|ShiftMask,             XK_space,  toggle_floating,   {0} },
+	{ SuperMask,                       XK_f,      toggle_fullscreen, {0} },
+	{ SuperMask,                       XK_t,      setlayout_default, {0} },
+	{ SuperMask|ShiftMask,             XK_space,  toggle_floating,   {0} },
 
 	/* layouts: change */
-	/* { MODKEY|ShiftMask,             XK_f,      setlayout,         {.v = &layouts[1] } }, /1* floating *1/ */
-	{ MODKEY,                       XK_m,      setlayout,         {.v = &layouts[2] } }, /* monocle */
+	/* { SuperMask|ShiftMask,             XK_f,      setlayout,         {.v = &layouts[1] } }, /1* floating *1/ */
+	{ SuperMask,                       XK_m,      setlayout,         {.v = &layouts[2] } }, /* monocle */
 
 	/* tagging */
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
+	{ SuperMask,                       XK_0,      view,           {.ui = ~0 } },
+	{ SuperMask|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ SuperMask,                       XK_Tab,    view,           {0} },
 
-	/* monitor-related */
-	/* { MODKEY,                       XK_comma,  focusmon,       {.i = -1 } }, */
-	/* { MODKEY,                       XK_period, focusmon,       {.i = +1 } }, */
-	/* { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } }, */
-	/* { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } }, */
+	/* monitor control */
+	{ SuperMask|AltMask,                       XK_k,  focusmon,       {.i = -1 } },
+	{ SuperMask|AltMask,                       XK_j, focusmon,       {.i = +1 } },
+	{ SuperMask|AltMask|ShiftMask,             XK_k,  tagmon,         {.i = -1 } },
+	{ SuperMask|AltMask|ShiftMask,             XK_j, tagmon,         {.i = +1 } },
 
-	{ MODKEY|ShiftMask,             XK_g,	   setgaps,        {.i = -5 } },
-	{ MODKEY,                       XK_g,	   setgaps,        {.i = +5 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
+	{ SuperMask|ShiftMask,             XK_g,	   setgaps,        {.i = -5 } },
+	{ SuperMask,                       XK_g,	   setgaps,        {.i = +5 } },
+	{ SuperMask|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 
-	/* { MODKEY,						XK_p,	   zoom,           {0} }, */
+	/* { SuperMask,						XK_p,	   zoom,           {0} }, */
 
 	/* switch workspaces */
 	TAGKEYS(                        XK_1,                      0)
@@ -123,24 +126,25 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 
   /* specials */
-	{ MODKEY,                       XK_F5,      key_xrdb,          { .v = NULL } },
-	{ MODKEY|ShiftMask|ControlMask, XK_s,       spawn,             SHCMD("start-sxhkd standard") },
-	{ MODKEY|ControlMask,           XK_t,       spawn,             SHCMD("st") },
+	{ SuperMask,                       XK_F5,      key_xrdb,          { .v = NULL } },
+	{ SuperMask|ShiftMask|ControlMask, XK_s,       spawn,             SHCMD("start-sxhkd standard") },
+	{ SuperMask|ControlMask,           XK_t,       spawn,             SHCMD("st") },
 };
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
-	/* click                event mask      button          function        argument */
-	{ ClkLtSymbol,          0,              Button1,        setlayout,       {0} },
-	{ ClkLtSymbol,          0,              Button3,        setlayout,       { .v = &layouts[2] } },
-	{ ClkWinTitle,          0,              Button2,        zoom,            {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,           SHCMD("st") },
-	{ ClkClientWin,         MODKEY,         Button1,        movemouse,       {0} },
-	{ ClkClientWin,         MODKEY,         Button2,        toggle_floating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,     {0} },
-	{ ClkTagBar,            0,              Button1,        view,            {0} },
-	{ ClkTagBar,            0,              Button3,        toggleview,      {0} },
-	{ ClkTagBar,            MODKEY,         Button1,        tag,             {0} },
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,       {0} },
+	/* click                event mask       button          function        argument */
+	{ ClkLtSymbol,          0,                Button1,        setlayout,       {0} },
+	{ ClkLtSymbol,          0,                Button3,        setlayout,       { .v = &layouts[2] } },
+	{ ClkWinTitle,          0,                Button2,        zoom,            {0} },
+	{ ClkStatusText,        0,                Button2,        spawn,           SHCMD("st") },
+	{ ClkClientWin,         SuperMask,           Button1,        movemouse,       {0} },
+	{ ClkClientWin,         SuperMask,           Button2,        toggle_floating, {0} },
+	{ ClkClientWin,         SuperMask|ShiftMask, Button1,        resizemouse,     {0} },
+	/* { ClkClientWin,         SuperMask,          Button3,        resizemouse,     {0} }, */
+	{ ClkTagBar,            0,                Button1,        view,            {0} },
+	{ ClkTagBar,            0,                Button3,        toggleview,      {0} },
+	{ ClkTagBar,            SuperMask,           Button1,        tag,             {0} },
+	{ ClkTagBar,            SuperMask,           Button3,        toggletag,       {0} },
 };
